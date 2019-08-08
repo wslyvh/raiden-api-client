@@ -1,0 +1,40 @@
+{
+  "name": "raiden-client",
+  "description": "Raiden Network API TypeScript client",
+  "version": "0.1.0",
+  "author": "wslyvh",
+  "license": "MIT",
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "raiden",
+    "raiden-network"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wslyvh/Raiden-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wslyvh/Raiden-client/issues"
+  },
+  "homepage": "https://github.com/wslyvh/Raiden-client#readme",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config jestconfig.json",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "lint-fix": "tslint --fix -c tslint.json -p tsconfig.json"
+  },
+  "devDependencies": {
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/jest": "^24.0.17",
+    "jest": "^24.8.0"
+  }
+}
