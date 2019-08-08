@@ -1,5 +1,5 @@
 {
-  "name": "raiden-client",
+  "name": "raiden-api-client",
   "description": "Raiden Network API TypeScript client",
   "version": "0.1.0",
   "author": "wslyvh",
