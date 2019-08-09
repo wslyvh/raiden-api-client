@@ -1,4 +1,5 @@
-import fetch from "isomorphic-fetch";
+// tslint:disable-next-line: no-var-requires
+require("isomorphic-fetch"); /* global fetch */
 import { Address } from "../models/v1/address";
 import { Tokens } from "../models/v1/tokens";
 
@@ -28,10 +29,12 @@ export class RaidenClient {
     const response = await fetch(uri);
 
     if (response.status !== 200) {
+      // console.log(`Error ${response.status} - ${response.statusText}`);
       throw new Error(`invalid response: ${response.status}`);
     }
 
     try {
+      // console.log(response);
       return (await response.json()) as T;
     } catch (err) {
       throw new Error(`failed to read response: ${err.message}`);

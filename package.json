@@ -27,7 +27,9 @@
     "lint-fix": "tslint --fix -c tslint.json -p tsconfig.json"
   },
   "devDependencies": {
+    "@types/fetch-mock": "^7.3.1",
     "@types/isomorphic-fetch": "0.0.35",
+    "fetch-mock": "^7.3.9",
     "ts-jest": "^24.0.2",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
