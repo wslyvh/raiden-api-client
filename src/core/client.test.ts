@@ -58,4 +58,14 @@ describe("testing api", () => {
     expect(response).toBeDefined();
     expect(response.length).toBeGreaterThan(1);
   });
+
+  test("Get Channels", async () => {
+    fetchMock.mock(apiUrl + "channels", []);
+    const client = new RaidenClient(baseUrl, version);
+
+    const response = await client.getChannels();
+
+    expect(response).toBeDefined();
+    expect(response.length).toBe(0);
+  });
 });

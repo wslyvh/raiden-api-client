@@ -1,6 +1,7 @@
 // tslint:disable-next-line: no-var-requires
 require("isomorphic-fetch"); /* global fetch */
 import { Address } from "../models/v1/address";
+import { Channels } from "../models/v1/channel";
 import { Tokens } from "../models/v1/tokens";
 
 export class RaidenClient {
@@ -23,6 +24,10 @@ export class RaidenClient {
 
   public async getTokens(): Promise<Tokens> {
     return this.get<Tokens>(this.apiUrl + "tokens");
+  }
+
+  public async getChannels(): Promise<Channels> {
+    return this.get<Channels>(this.apiUrl + "channels");
   }
 
   private async get<T>(uri: string): Promise<T> {
