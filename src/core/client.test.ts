@@ -68,4 +68,23 @@ describe("testing api", () => {
     expect(response).toBeDefined();
     expect(response.length).toBe(0);
   });
+
+  test("Get Channels for token address", async () => {
+    const tokenAddress = "0x01";
+    fetchMock.mock(apiUrl + "channels/" + tokenAddress, []);
+    const client = new RaidenClient(baseUrl, version);
+
+    const response = await client.getChannelsForTokenAddress(tokenAddress);
+
+    expect(response).toBeDefined();
+    expect(response.length).toBe(0);
+  });
+
+  test("Get Channels with empty token address", async () => {
+    const tokenAddress = "";
+    fetchMock.mock(apiUrl + "channels/", []);
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.getChannelsForTokenAddress(tokenAddress)).rejects.toThrow();
+  });
 });

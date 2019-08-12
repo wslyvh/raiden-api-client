@@ -30,6 +30,14 @@ export class RaidenClient {
     return this.get<Channels>(this.apiUrl + "channels");
   }
 
+  public async getChannelsForTokenAddress(tokenAddress: string): Promise<Channels> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+
+    return this.get<Channels>(this.apiUrl + "channels/" + tokenAddress);
+  }
+
   private async get<T>(uri: string): Promise<T> {
     const response = await fetch(uri);
 
