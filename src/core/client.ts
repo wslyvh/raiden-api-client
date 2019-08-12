@@ -1,8 +1,6 @@
 // tslint:disable-next-line: no-var-requires
 require("isomorphic-fetch"); /* global fetch */
-import { Address } from "../models/v1/address";
-import { Channels } from "../models/v1/channel";
-import { Tokens } from "../models/v1/tokens";
+import { Address, Channels, Partners, Tokens, Transfers } from "../models/v1";
 
 export class RaidenClient {
   private apiUrl: string;
@@ -49,6 +47,39 @@ export class RaidenClient {
     return this.get<string>(this.apiUrl + "tokens/" + tokenAddress);
   }
 
+  public async getPartnersForTokenAddress(tokenAddress: string): Promise<Partners> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+
+    return this.get<Partners>(`${this.apiUrl}tokens/${tokenAddress}/partners`);
+  }
+
+  // Transfers
+  public async getPendingTransfers(): Promise<Transfers> {
+    return this.get<Transfers>(this.apiUrl + "pending_transfers");
+  }
+
+  public async getPendingTransfersForTokenAddress(tokenAddress: string): Promise<Partners> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+
+    return this.get<Partners>(`${this.apiUrl}pending_transfers/${tokenAddress}`);
+  }
+
+  public async getPendingTransfersForTokenAddressAndChannel(tokenAddress: string, partnerAddress: string): Promise<Partners> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    return this.get<Partners>(`${this.apiUrl}pending_transfers/${tokenAddress}/${partnerAddress}`);
+  }
+
+  // Private
   private async get<T>(uri: string): Promise<T> {
     const response = await fetch(uri);
 
