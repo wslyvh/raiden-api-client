@@ -18,14 +18,12 @@ export class RaidenClient {
     this.apiUrl = `${baseUrl}/${version}/`;
   }
 
+  // Client Address
   public async getClientAddress(): Promise<Address> {
     return this.get<Address>(this.apiUrl + "address");
   }
 
-  public async getTokens(): Promise<Tokens> {
-    return this.get<Tokens>(this.apiUrl + "tokens");
-  }
-
+  // Channels
   public async getChannels(): Promise<Channels> {
     return this.get<Channels>(this.apiUrl + "channels");
   }
@@ -38,17 +36,32 @@ export class RaidenClient {
     return this.get<Channels>(this.apiUrl + "channels/" + tokenAddress);
   }
 
+  // Tokens
+  public async getTokens(): Promise<Tokens> {
+    return this.get<Tokens>(this.apiUrl + "tokens");
+  }
+
+  public async getTokenNetworkForTokenAddress(tokenAddress: string): Promise<string> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+
+    return this.get<string>(this.apiUrl + "tokens/" + tokenAddress);
+  }
+
   private async get<T>(uri: string): Promise<T> {
     const response = await fetch(uri);
 
     if (response.status !== 200) {
-      // console.log(`Error ${response.status} - ${response.statusText}`);
+      // console.log(`Error ${response.status} - ${response.statusText} | ${uri}`);
       throw new Error(`invalid response: ${response.status}`);
     }
 
     try {
-      // console.log(response);
-      return (await response.json()) as T;
+      return (await response
+        .clone()
+        .json()
+        .catch(() => response.text())) as T;
     } catch (err) {
       throw new Error(`failed to read response: ${err.message}`);
     }
