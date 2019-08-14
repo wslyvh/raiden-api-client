@@ -8,7 +8,7 @@ const apiUrl = `${baseUrl}/${version}/`;
 // [x] Node information
 // [x] Deploying
 // [x] Channels
-//    [ ] Channel Management
+//    [x] Channel Management
 // [x] Tokens
 //    [x] Transfers
 // [ ] Connection Management

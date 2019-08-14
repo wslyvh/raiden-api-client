@@ -1,11 +1,11 @@
 // tslint:disable-next-line: no-var-requires
 require("isomorphic-fetch"); /* global fetch */
-import { Address, Channels, Partners, Token, Tokens, Transfers } from "../models/v1";
+import { Address, Channel, Channels, Partners, Token, Tokens, Transfers } from "../models/v1";
 
 // [x] Node information
 // [x] Deploying
 // [x] Channels
-//    [ ] Channel Management
+//    [x] Channel Management
 // [x] Tokens
 //    [x] Transfers
 // [ ] Connection Management
@@ -66,6 +66,61 @@ export class RaidenClient {
   }
 
   // Channel Management
+  public async createChannel(partnerAddress: string, tokenAddress: string, totalDeposit: number, settleTimeout: number): Promise<Channel> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+    if (totalDeposit <= 0) {
+      throw new Error(`totalDeposit is required`);
+    }
+    if (settleTimeout <= 0) {
+      throw new Error(`settleTimeout is required`);
+    }
+
+    return this.call<Channel>(`${this.apiUrl}/channels`, "PUT", 201);
+  }
+
+  public async closeChannel(tokenAddress: string, partnerAddress: string): Promise<Channel> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    const body = { state: "closed" };
+
+    return this.call<Channel>(`${this.apiUrl}/channels/${tokenAddress}/${partnerAddress}`, "PATCH", 200, body);
+  }
+
+  public async depositChannel(tokenAddress: string, partnerAddress: string): Promise<Channel> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    const body = { total_deposit: 100 };
+
+    return this.call<Channel>(`${this.apiUrl}/channels/${tokenAddress}/${partnerAddress}`, "PATCH", 200, body);
+  }
+
+  public async withdrawChannel(tokenAddress: string, partnerAddress: string): Promise<Channel> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    const body = { total_withdraw: 100 };
+
+    return this.call<Channel>(`${this.apiUrl}/channels/${tokenAddress}/${partnerAddress}`, "PATCH", 200, body);
+  }
 
   // Tokens
   public async getTokens(): Promise<Tokens> {
@@ -113,8 +168,9 @@ export class RaidenClient {
   }
 
   // Private
-  private async call<T>(uri: string, method: string = "GET", statusCode: number = 200): Promise<T> {
+  private async call<T>(uri: string, method: string = "GET", statusCode: number = 200, body: any = {}): Promise<T> {
     const response = await fetch(uri, {
+      body: JSON.stringify(body),
       method
     });
 
