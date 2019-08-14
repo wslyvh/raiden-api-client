@@ -1,6 +1,6 @@
 // tslint:disable-next-line: no-var-requires
 require("isomorphic-fetch"); /* global fetch */
-import { Address, Channel, Channels, Events, Partners, Payment, Token, Tokens, Transfers } from "../models/v1";
+import { Address, Channel, Channels, Events, Partners, Payment, Token, Tokens, Transfers, Connections } from "../models/v1";
 
 // [x] Node information
 // [x] Deploying
@@ -168,6 +168,36 @@ export class RaidenClient {
   }
 
   // Connection Management
+  public async getConnections(): Promise<Connections> {
+    return this.call<Connections>(`${this.apiUrl}/connections`);
+  }
+
+  public async joinTokenNetwork(tokenAddress: string, funds: number, channelTarget?: number, fundsTarget?: number): Promise<string> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (funds <= 0) {
+      throw new Error(`funds is required`);
+    }
+
+    const body: any = { funds };
+    if (channelTarget && channelTarget > 0) {
+      body.initial_channel_target = channelTarget;
+    }
+    if (fundsTarget && fundsTarget > 0) {
+      body.joinable_funds_target = channelTarget;
+    }
+
+    return this.call<string>(`${this.apiUrl}/connections/${tokenAddress}`, "PUT", 204, body);
+  }
+
+  public async leaveTokenNetwork(tokenAddress: string): Promise<string[]> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+
+    return this.call<string[]>(`${this.apiUrl}/connections/${tokenAddress}`, "DELETE", 200);
+  }
 
   // Payments
   public async initiatePayment(tokenAddress: string, targetAddress: string, amount: number, identifier: number): Promise<Payment> {
@@ -211,6 +241,10 @@ export class RaidenClient {
     if (response.status !== statusCode) {
       // console.log(`Error ${response.status} - ${response.statusText} | ${uri}`);
       throw new Error(`invalid response: ${response.status}`);
+    }
+
+    if (response.status === 204) {
+      return {} as T;
     }
 
     try {
