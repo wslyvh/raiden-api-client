@@ -37,13 +37,11 @@ describe("Tokens endpoint", () => {
     fetchMock.mock(apiUrl + "tokens/" + tokenAddress, 404);
     const client = new RaidenClient(baseUrl, version);
 
-    // TODO: Should throw with error; invalid endpoint, Not a valid EIP55 encoded address.
     await expect(client.getTokenNetworkForTokenAddress(tokenAddress)).rejects.toThrow();
   });
 
   test("Get Token network with empty token address", async () => {
     const tokenAddress = "";
-    fetchMock.mock(apiUrl + "tokens/", []);
     const client = new RaidenClient(baseUrl, version);
 
     await expect(client.getTokenNetworkForTokenAddress(tokenAddress)).rejects.toThrow();
@@ -54,7 +52,24 @@ describe("Tokens endpoint", () => {
     fetchMock.mock(apiUrl + "tokens/" + tokenAddress, 404);
     const client = new RaidenClient(baseUrl, version);
 
-    // TODO: Should throw with error; No token network registered for token
+    await expect(client.getTokenNetworkForTokenAddress(tokenAddress)).rejects.toThrow();
+  });
+
+  test("Get Partners for token address", async () => {
+    const tokenAddress = "0x01";
+    fetchMock.mock(`${apiUrl}tokens/${tokenAddress}/partners`, []);
+    const client = new RaidenClient(baseUrl, version);
+
+    const response = await client.getPartnersForTokenAddress(tokenAddress);
+
+    expect(response).toBeDefined();
+    expect(response.length).toBe(0);
+  });
+
+  test("Get Partners with empty token address", async () => {
+    const tokenAddress = "";
+    const client = new RaidenClient(baseUrl, version);
+
     await expect(client.getTokenNetworkForTokenAddress(tokenAddress)).rejects.toThrow();
   });
 });
@@ -87,46 +102,36 @@ describe("Token transfers ", () => {
 
   test("Get Pending transfers with empty token address", async () => {
     const tokenAddress = "";
-    fetchMock.mock(apiUrl + "pending_transfers/", []);
     const client = new RaidenClient(baseUrl, version);
 
     await expect(client.getPendingTransfersForTokenAddress(tokenAddress)).rejects.toThrow();
   });
 
-  // get Pending transfers for token and partner
-
-  test("Get Pending transfers with empty token address and partner address", async () => {
+  test("Get Pending transfers for token and partner", async () => {
     const tokenAddress = "0x01";
-    const partnerAddress = "";
-    fetchMock.mock(apiUrl + "pending_transfers/" + tokenAddress + "/", []);
+    const partnerAddress = "0x02";
+    fetchMock.mock(`${apiUrl}pending_transfers/${tokenAddress}/${partnerAddress}`, []);
     const client = new RaidenClient(baseUrl, version);
 
-    await expect(client.getPendingTransfersForTokenAddressAndChannel(tokenAddress, partnerAddress)).rejects.toThrow();
+    const response = await client.getPendingTransfersForTokenAddressAndPartner(tokenAddress, partnerAddress);
+
+    expect(response).toBeDefined();
+    expect(response.length).toBe(0);
   });
 
-  // test("Get Token network for invalid token address", async () => {
-  //   const tokenAddress = "0x01";
-  //   fetchMock.mock(apiUrl + "tokens/" + tokenAddress, 404);
-  //   const client = new RaidenClient(baseUrl, version);
+  test("Get Pending transfers for token and partner with empty token address", async () => {
+    const tokenAddress = "";
+    const partnerAddress = "0x02";
+    const client = new RaidenClient(baseUrl, version);
 
-  //   // TODO: Should throw with error; invalid endpoint, Not a valid EIP55 encoded address.
-  //   await expect(client.getTokenNetworkForTokenAddress(tokenAddress)).rejects.toThrow();
-  // });
+    await expect(client.getPendingTransfersForTokenAddressAndPartner(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
 
-  // test("Get Token network with empty token address", async () => {
-  //   const tokenAddress = "";
-  //   fetchMock.mock(apiUrl + "tokens/", []);
-  //   const client = new RaidenClient(baseUrl, version);
+  test("Get Pending transfers for token and partner with empty partner address", async () => {
+    const tokenAddress = "0x01";
+    const partnerAddress = "";
+    const client = new RaidenClient(baseUrl, version);
 
-  //   await expect(client.getTokenNetworkForTokenAddress(tokenAddress)).rejects.toThrow();
-  // });
-
-  // test("Get Token network that is not registered", async () => {
-  //   const tokenAddress = "0xe925004Ae695103f5D0A2A764397b96ED3d81C7F";
-  //   fetchMock.mock(apiUrl + "tokens/" + tokenAddress, 404);
-  //   const client = new RaidenClient(baseUrl, version);
-
-  //   // TODO: Should throw with error; No token network registered for token
-  //   await expect(client.getTokenNetworkForTokenAddress(tokenAddress)).rejects.toThrow();
-  // });
+    await expect(client.getPendingTransfersForTokenAddressAndPartner(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
 });

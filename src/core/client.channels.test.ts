@@ -33,7 +33,6 @@ describe("Channels endpoint", () => {
 
   test("Get Channels with empty token address", async () => {
     const tokenAddress = "";
-    fetchMock.mock(apiUrl + "channels/", []);
     const client = new RaidenClient(baseUrl, version);
 
     await expect(client.getChannelsForTokenAddress(tokenAddress)).rejects.toThrow();

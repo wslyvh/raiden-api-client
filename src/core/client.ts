@@ -4,10 +4,10 @@ import { Address, Channels, Partners, Token, Tokens, Transfers } from "../models
 
 // [x] Node information
 // [x] Deploying
-// [ ] Channels
+// [x] Channels
 //    [ ] Channel Management
-// [ ] Tokens
-//    [ ] Transfers
+// [x] Tokens
+//    [x] Transfers
 // [ ] Connection Management
 // [ ] Payments
 // [ ] Querying
@@ -101,7 +101,7 @@ export class RaidenClient {
     return this.call<Partners>(`${this.apiUrl}/pending_transfers/${tokenAddress}`);
   }
 
-  public async getPendingTransfersForTokenAddressAndChannel(tokenAddress: string, partnerAddress: string): Promise<Partners> {
+  public async getPendingTransfersForTokenAddressAndPartner(tokenAddress: string, partnerAddress: string): Promise<Partners> {
     if (!tokenAddress) {
       throw new Error(`tokenAddress is required`);
     }

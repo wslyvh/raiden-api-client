@@ -6,11 +6,11 @@ const version = "v1";
 const apiUrl = `${baseUrl}/${version}/`;
 
 // [x] Node information
-// [ ] Deploying
-// [ ] Channels
+// [x] Deploying
+// [x] Channels
 //    [ ] Channel Management
-// [ ] Tokens
-//    [ ] Transfers
+// [x] Tokens
+//    [x] Transfers
 // [ ] Connection Management
 // [ ] Payments
 // [ ] Querying
