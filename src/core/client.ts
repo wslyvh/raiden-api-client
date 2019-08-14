@@ -54,6 +54,17 @@ export class RaidenClient {
     return this.call<Channels>(`${this.apiUrl}/channels/${tokenAddress}`);
   }
 
+  public async getChannelsForTokenAddressAndPartnerAddress(tokenAddress: string, partnerAddress: string): Promise<Channels> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    return this.call<Channels>(`${this.apiUrl}/channels/${tokenAddress}/${partnerAddress}`);
+  }
+
   // Channel Management
 
   // Tokens

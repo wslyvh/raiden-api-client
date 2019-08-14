@@ -38,4 +38,16 @@ describe("Channels endpoint", () => {
 
     await expect(client.getChannelsForTokenAddress(tokenAddress)).rejects.toThrow();
   });
+
+  test("Get Channels for token address and partner address", async () => {
+    const tokenAddress = "0x01";
+    const partnerAddress = "0x02";
+    fetchMock.mock(apiUrl + "channels/" + tokenAddress + "/" + partnerAddress, []);
+    const client = new RaidenClient(baseUrl, version);
+
+    const response = await client.getChannelsForTokenAddressAndPartnerAddress(tokenAddress, partnerAddress);
+
+    expect(response).toBeDefined();
+    expect(response.length).toBe(0);
+  });
 });
