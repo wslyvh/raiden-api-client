@@ -70,7 +70,7 @@ describe("Tokens endpoint", () => {
     const tokenAddress = "";
     const client = new RaidenClient(baseUrl, version);
 
-    await expect(client.getTokenNetworkForTokenAddress(tokenAddress)).rejects.toThrow();
+    await expect(client.getPartnersForTokenAddress(tokenAddress)).rejects.toThrow();
   });
 });
 
