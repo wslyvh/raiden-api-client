@@ -79,8 +79,9 @@ export class RaidenClient {
     if (settleTimeout <= 0) {
       throw new Error(`settleTimeout is required`);
     }
+    const body = { partner_address: partnerAddress, token_address: tokenAddress, total_deposit: totalDeposit, settle_timeout: settleTimeout };
 
-    return this.call<Channel>(`${this.apiUrl}/channels`, "PUT", 201);
+    return this.call<Channel>(`${this.apiUrl}/channels`, "PUT", 201, body);
   }
 
   public async closeChannel(tokenAddress: string, partnerAddress: string): Promise<Channel> {
