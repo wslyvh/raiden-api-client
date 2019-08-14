@@ -3,7 +3,7 @@ require("isomorphic-fetch"); /* global fetch */
 import { Address, Channels, Partners, Token, Tokens, Transfers } from "../models/v1";
 
 // [x] Node information
-// [ ] Deploying
+// [x] Deploying
 // [ ] Channels
 //    [ ] Channel Management
 // [ ] Tokens
@@ -24,12 +24,12 @@ export class RaidenClient {
       throw new Error(`version is required`);
     }
 
-    this.apiUrl = `${baseUrl}/${version}/`;
+    this.apiUrl = `${baseUrl}/${version}`;
   }
 
   // Node Information
   public async getClientAddress(): Promise<Address> {
-    return this.call<Address>(this.apiUrl + "address");
+    return this.call<Address>(`${this.apiUrl}/address`);
   }
 
   // Deploying
@@ -38,12 +38,12 @@ export class RaidenClient {
       throw new Error(`tokenAddress is required`);
     }
 
-    return this.call<Token>(`${this.apiUrl}tokens/${tokenAddress}`, "PUT", 201);
+    return this.call<Token>(`${this.apiUrl}/tokens/${tokenAddress}`, "PUT", 201);
   }
 
   // Channels
   public async getChannels(): Promise<Channels> {
-    return this.call<Channels>(this.apiUrl + "channels");
+    return this.call<Channels>(`${this.apiUrl}/channels`);
   }
 
   public async getChannelsForTokenAddress(tokenAddress: string): Promise<Channels> {
@@ -51,14 +51,14 @@ export class RaidenClient {
       throw new Error(`tokenAddress is required`);
     }
 
-    return this.call<Channels>(this.apiUrl + "channels/" + tokenAddress);
+    return this.call<Channels>(`${this.apiUrl}/channels/${tokenAddress}`);
   }
 
   // Channel Management
 
   // Tokens
   public async getTokens(): Promise<Tokens> {
-    return this.call<Tokens>(this.apiUrl + "tokens");
+    return this.call<Tokens>(`${this.apiUrl}/tokens`);
   }
 
   public async getTokenNetworkForTokenAddress(tokenAddress: string): Promise<string> {
@@ -66,7 +66,7 @@ export class RaidenClient {
       throw new Error(`tokenAddress is required`);
     }
 
-    return this.call<string>(this.apiUrl + "tokens/" + tokenAddress);
+    return this.call<string>(`${this.apiUrl}/tokens/${tokenAddress}`);
   }
 
   public async getPartnersForTokenAddress(tokenAddress: string): Promise<Partners> {
@@ -74,12 +74,12 @@ export class RaidenClient {
       throw new Error(`tokenAddress is required`);
     }
 
-    return this.call<Partners>(`${this.apiUrl}tokens/${tokenAddress}/partners`);
+    return this.call<Partners>(`${this.apiUrl}/tokens/${tokenAddress}/partners`);
   }
 
   // Transfers
   public async getPendingTransfers(): Promise<Transfers> {
-    return this.call<Transfers>(this.apiUrl + "pending_transfers");
+    return this.call<Transfers>(`${this.apiUrl}/pending_transfers`);
   }
 
   public async getPendingTransfersForTokenAddress(tokenAddress: string): Promise<Partners> {
@@ -87,7 +87,7 @@ export class RaidenClient {
       throw new Error(`tokenAddress is required`);
     }
 
-    return this.call<Partners>(`${this.apiUrl}pending_transfers/${tokenAddress}`);
+    return this.call<Partners>(`${this.apiUrl}/pending_transfers/${tokenAddress}`);
   }
 
   public async getPendingTransfersForTokenAddressAndChannel(tokenAddress: string, partnerAddress: string): Promise<Partners> {
@@ -98,7 +98,7 @@ export class RaidenClient {
       throw new Error(`partnerAddress is required`);
     }
 
-    return this.call<Partners>(`${this.apiUrl}pending_transfers/${tokenAddress}/${partnerAddress}`);
+    return this.call<Partners>(`${this.apiUrl}/pending_transfers/${tokenAddress}/${partnerAddress}`);
   }
 
   // Private
