@@ -67,11 +67,11 @@ export class RaidenClient {
 
   // Channel Management
   public async createChannel(partnerAddress: string, tokenAddress: string, totalDeposit: number, settleTimeout: number): Promise<Channel> {
-    if (!tokenAddress) {
-      throw new Error(`tokenAddress is required`);
-    }
     if (!partnerAddress) {
       throw new Error(`partnerAddress is required`);
+    }
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
     }
     if (totalDeposit <= 0) {
       throw new Error(`totalDeposit is required`);

@@ -39,7 +39,7 @@ describe("Channels endpoint", () => {
     await expect(client.getChannelsForTokenAddress(tokenAddress)).rejects.toThrow();
   });
 
-  test("Get Channels for token address and partner address", async () => {
+  test("Get Channels for token and partner", async () => {
     const tokenAddress = "0x01";
     const partnerAddress = "0x02";
     fetchMock.mock(apiUrl + "channels/" + tokenAddress + "/" + partnerAddress, []);
@@ -50,6 +50,22 @@ describe("Channels endpoint", () => {
     expect(response).toBeDefined();
     expect(response.length).toBe(0);
   });
+
+  test("Get Channels for token and partner with empty token address", async () => {
+    const tokenAddress = "";
+    const partnerAddress = "0x02";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.getChannelsForTokenAddressAndPartnerAddress(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
+
+  test("Get Channels for token and partner with empty partner address", async () => {
+    const tokenAddress = "0x01";
+    const partnerAddress = "";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.getChannelsForTokenAddressAndPartnerAddress(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
 });
 
 describe("Channels management", () => {
@@ -58,8 +74,8 @@ describe("Channels management", () => {
   });
 
   test("Open a new channel", async () => {
-    const tokenAddress = "0x01";
-    const partnerAddress = "0x02";
+    const partnerAddress = "0x01";
+    const tokenAddress = "0x02";
     const totalDeposit = 100;
     const settleTimeout = 200;
     const expected: Channel = {
@@ -91,8 +107,44 @@ describe("Channels management", () => {
     expect(response.settle_timeout).toBe(settleTimeout);
   });
 
-  test("Open a channel with invalid body", async () => {
-    // TODO
+  test("Open a new channel with empty partner address", async () => {
+    const partnerAddress = "";
+    const tokenAddress = "0x02";
+    const totalDeposit = 100;
+    const settleTimeout = 200;
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.createChannel(tokenAddress, partnerAddress, totalDeposit, settleTimeout)).rejects.toThrow();
+  });
+
+  test("Open a new channel with empty token address", async () => {
+    const partnerAddress = "0x01";
+    const tokenAddress = "";
+    const totalDeposit = 100;
+    const settleTimeout = 200;
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.createChannel(tokenAddress, partnerAddress, totalDeposit, settleTimeout)).rejects.toThrow();
+  });
+
+  test("Open a new channel with no total deposit", async () => {
+    const partnerAddress = "0x01";
+    const tokenAddress = "0x02";
+    const totalDeposit = 0;
+    const settleTimeout = 200;
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.createChannel(tokenAddress, partnerAddress, totalDeposit, settleTimeout)).rejects.toThrow();
+  });
+
+  test("Open a new channel with no settle timeout", async () => {
+    const partnerAddress = "0x01";
+    const tokenAddress = "0x02";
+    const totalDeposit = 100;
+    const settleTimeout = 0;
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.createChannel(tokenAddress, partnerAddress, totalDeposit, settleTimeout)).rejects.toThrow();
   });
 
   test("Close a channel", async () => {
@@ -111,6 +163,22 @@ describe("Channels management", () => {
     expect(response.state).toBe("closed");
   });
 
+  test("Close a channel with empty token address", async () => {
+    const tokenAddress = "";
+    const partnerAddress = "0x02";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.closeChannel(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
+
+  test("Close a channel with empty partner address", async () => {
+    const tokenAddress = "0x01";
+    const partnerAddress = "";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.closeChannel(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
+
   test("Increase the deposit in a channel", async () => {
     const tokenAddress = "0x01";
     const partnerAddress = "0x02";
@@ -127,6 +195,22 @@ describe("Channels management", () => {
     expect(response.total_deposit).toBe(100);
   });
 
+  test("Increase the deposit in a channel with empty token address", async () => {
+    const tokenAddress = "";
+    const partnerAddress = "0x02";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.depositChannel(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
+
+  test("Increase the deposit in a channel with empty partner address", async () => {
+    const tokenAddress = "0x01";
+    const partnerAddress = "";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.depositChannel(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
+
   test("Withdraw tokens from a channel", async () => {
     const tokenAddress = "0x01";
     const partnerAddress = "0x02";
@@ -141,5 +225,21 @@ describe("Channels management", () => {
 
     expect(response).toBeDefined();
     expect(response.total_withdraw).toBe(100);
+  });
+
+  test("Withdraw tokens from a channel with empty token address", async () => {
+    const tokenAddress = "";
+    const partnerAddress = "0x02";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.withdrawChannel(tokenAddress, partnerAddress)).rejects.toThrow();
+  });
+
+  test("Withdraw tokens from a channel with emmpty partner address", async () => {
+    const tokenAddress = "0x01";
+    const partnerAddress = "";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.withdrawChannel(tokenAddress, partnerAddress)).rejects.toThrow();
   });
 });
