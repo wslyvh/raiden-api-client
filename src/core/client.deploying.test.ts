@@ -30,4 +30,11 @@ describe("Deploying endpoint", () => {
     expect(response).toBeDefined();
     expect(response.token_network_address).toBe(tokenNetworkAddress);
   });
+
+  test("Register a token with empty token address", async () => {
+    const tokenAddress = "";
+    const client = new RaidenClient(baseUrl, version);
+
+    await expect(client.registerToken(tokenAddress)).rejects.toThrow();
+  });
 });
