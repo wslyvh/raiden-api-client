@@ -1,6 +1,6 @@
 // tslint:disable-next-line: no-var-requires
 require("isomorphic-fetch"); /* global fetch */
-import { Address, Channel, Channels, Partners, Token, Tokens, Transfers } from "../models/v1";
+import { Address, Channel, Channels, Events, Partners, Token, Tokens, Transfers } from "../models/v1";
 
 // [x] Node information
 // [x] Deploying
@@ -165,6 +165,22 @@ export class RaidenClient {
     }
 
     return this.call<Partners>(`${this.apiUrl}/pending_transfers/${tokenAddress}/${partnerAddress}`);
+  }
+
+  // Connection Management
+
+  // Payments
+
+  // Querying
+  public async queryEvents(tokenAddress: string, targetAddress: string): Promise<Events> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!targetAddress) {
+      throw new Error(`targetAddress is required`);
+    }
+
+    return this.call<Events>(`${this.apiUrl}/payments/${tokenAddress}/${targetAddress}`);
   }
 
   // Private
