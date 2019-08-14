@@ -1,6 +1,6 @@
 // tslint:disable-next-line: no-var-requires
 require("isomorphic-fetch"); /* global fetch */
-import { Address, Channel, Channels, Events, Partners, Payment, Token, Tokens, Transfers, Connections } from "../models/v1";
+import { Address, Channel, Channels, Connections, Events, Partners, Payment, Token, Tokens, Transfers } from "../models/v1";
 
 // [x] Node information
 // [x] Deploying
