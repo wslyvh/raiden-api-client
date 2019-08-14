@@ -1,6 +1,6 @@
 import fetchMock from "fetch-mock";
-import { RaidenClient } from "./client";
 import { Payment } from "../models/v1";
+import { RaidenClient } from "./client";
 
 const baseUrl = "http://localhost:5001/api";
 const version = "v1";
