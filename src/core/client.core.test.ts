@@ -12,9 +12,8 @@ const apiUrl = `${baseUrl}/${version}/`;
 // [x] Tokens
 //    [x] Transfers
 // [ ] Connection Management
-// [ ] Payments
-// [ ] Querying
-// [ ] Testing / Mint
+// [x] Payments
+// [x] Querying
 
 describe("Core Client API", () => {
   beforeEach(() => {

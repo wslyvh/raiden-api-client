@@ -9,9 +9,8 @@ import { Address, Channel, Channels, Events, Partners, Payment, Token, Tokens, T
 // [x] Tokens
 //    [x] Transfers
 // [ ] Connection Management
-// [ ] Payments
-// [ ] Querying
-// [ ] Testing / Mint
+// [x] Payments
+// [x] Querying
 
 export class RaidenClient {
   private apiUrl: string;
