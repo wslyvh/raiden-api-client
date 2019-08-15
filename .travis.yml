@@ -1,23 +1,35 @@
 language: node_js
 node_js:
-- '8'
+  - "8"
 branches:
   only:
-  - develop
-  - master
+    - develop
+    - master
 addons:
   sonarcloud:
     organization: "wslyvh-github"
     token:
       secure: ${SONAR_TOKEN}
 before_install:
-- npm update
+  - npm update
 install:
-- npm install
-- npm install codecov -g
+  - npm install
+  - npm install codecov -g
+before_script:
+  - rm -rf docs
 script:
-- npm run lint
-- npm run test
+  - npm run lint
+  - npm run test
+  - npm run doc
 after_success:
   - codecov
   - sonar-scanner
+before_deploy:
+  - touch ./docs/.nojekyll
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: ${GITHUB_TOKEN}
+  local_dir: "docs"
+  on:
+    branch: master
