@@ -30,4 +30,4 @@ deploy:
   on:
     branch: master
 after_deploy:
-  - touch /docs/.nojekyll
+  - touch /.nojekyll
