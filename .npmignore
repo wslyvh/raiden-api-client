@@ -1,0 +1,12 @@
+*
+
+!/build
+!/build/**
+/build/**/*.map
+/build/**/*.test.js
+
+/**/coverage
+/**/build
+
+/**/*.map
+/**/*.test.js

@@ -1,0 +1,44 @@
+{
+  "name": "raiden-api-client",
+  "description": "Raiden Network API TypeScript client",
+  "version": "0.1.2",
+  "author": "wslyvh",
+  "license": "MIT",
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "raiden",
+    "raiden-network"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wslyvh/Raiden-client.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wslyvh/Raiden-client/issues"
+  },
+  "homepage": "https://github.com/wslyvh/Raiden-client#readme",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config jestconfig.json",
+    "lint": "tslint -c tslint.json -p tsconfig.json",
+    "lint-fix": "tslint --fix -c tslint.json -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/fetch-mock": "^7.3.1",
+    "@types/isomorphic-fetch": "0.0.35",
+    "@types/jest": "^24.0.17",
+    "fetch-mock": "^7.3.9",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@types/node": "^12.7.1",
+    "isomorphic-fetch": "^2.2.1"
+  }
+}
