@@ -5,16 +5,6 @@ const baseUrl = "http://localhost:5001/api";
 const version = "v1";
 const apiUrl = `${baseUrl}/${version}/`;
 
-// [x] Node information
-// [x] Deploying
-// [x] Channels
-//    [x] Channel Management
-// [x] Tokens
-//    [x] Transfers
-// [ ] Connection Management
-// [x] Payments
-// [x] Querying
-
 describe("Core Client API", () => {
   beforeEach(() => {
     fetchMock.reset();
