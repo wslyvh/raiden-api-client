@@ -16,7 +16,7 @@ install:
   - npm install
   - npm install codecov -g
 before_script:
-  - rm -r docs
+  - rm -rf docs
 script:
   - npm run lint
   - npm run test
