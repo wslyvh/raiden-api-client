@@ -1,8 +1,16 @@
 // tslint:disable-next-line: no-var-requires
 require("isomorphic-fetch"); /* global fetch */
-import { Address } from "../models/v1/address";
-import { Channels } from "../models/v1/channel";
-import { Tokens } from "../models/v1/tokens";
+import { Address, Channel, Channels, Connections, Events, Partners, Payment, Token, Tokens, Transfers } from "../models/v1";
+
+// [x] Node information
+// [x] Deploying
+// [x] Channels
+//    [x] Channel Management
+// [x] Tokens
+//    [x] Transfers
+// [ ] Connection Management
+// [x] Payments
+// [x] Querying
 
 export class RaidenClient {
   private apiUrl: string;
@@ -15,17 +23,26 @@ export class RaidenClient {
       throw new Error(`version is required`);
     }
 
-    this.apiUrl = `${baseUrl}/${version}/`;
+    this.apiUrl = `${baseUrl}/${version}`;
   }
 
-  // Client Address
+  // Node Information
   public async getClientAddress(): Promise<Address> {
-    return this.get<Address>(this.apiUrl + "address");
+    return this.call<Address>(`${this.apiUrl}/address`);
+  }
+
+  // Deploying
+  public async registerToken(tokenAddress: string): Promise<Token> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+
+    return this.call<Token>(`${this.apiUrl}/tokens/${tokenAddress}`, "PUT", 201);
   }
 
   // Channels
   public async getChannels(): Promise<Channels> {
-    return this.get<Channels>(this.apiUrl + "channels");
+    return this.call<Channels>(`${this.apiUrl}/channels`);
   }
 
   public async getChannelsForTokenAddress(tokenAddress: string): Promise<Channels> {
@@ -33,12 +50,81 @@ export class RaidenClient {
       throw new Error(`tokenAddress is required`);
     }
 
-    return this.get<Channels>(this.apiUrl + "channels/" + tokenAddress);
+    return this.call<Channels>(`${this.apiUrl}/channels/${tokenAddress}`);
+  }
+
+  public async getChannelsForTokenAddressAndPartnerAddress(tokenAddress: string, partnerAddress: string): Promise<Channels> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    return this.call<Channels>(`${this.apiUrl}/channels/${tokenAddress}/${partnerAddress}`);
+  }
+
+  // Channel Management
+  public async createChannel(partnerAddress: string, tokenAddress: string, totalDeposit: number, settleTimeout: number): Promise<Channel> {
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (totalDeposit <= 0) {
+      throw new Error(`totalDeposit is required`);
+    }
+    if (settleTimeout <= 0) {
+      throw new Error(`settleTimeout is required`);
+    }
+    const body = { partner_address: partnerAddress, token_address: tokenAddress, total_deposit: totalDeposit, settle_timeout: settleTimeout };
+
+    return this.call<Channel>(`${this.apiUrl}/channels`, "PUT", 201, body);
+  }
+
+  public async closeChannel(tokenAddress: string, partnerAddress: string): Promise<Channel> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    const body = { state: "closed" };
+
+    return this.call<Channel>(`${this.apiUrl}/channels/${tokenAddress}/${partnerAddress}`, "PATCH", 200, body);
+  }
+
+  public async depositChannel(tokenAddress: string, partnerAddress: string): Promise<Channel> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    const body = { total_deposit: 100 };
+
+    return this.call<Channel>(`${this.apiUrl}/channels/${tokenAddress}/${partnerAddress}`, "PATCH", 200, body);
+  }
+
+  public async withdrawChannel(tokenAddress: string, partnerAddress: string): Promise<Channel> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    const body = { total_withdraw: 100 };
+
+    return this.call<Channel>(`${this.apiUrl}/channels/${tokenAddress}/${partnerAddress}`, "PATCH", 200, body);
   }
 
   // Tokens
   public async getTokens(): Promise<Tokens> {
-    return this.get<Tokens>(this.apiUrl + "tokens");
+    return this.call<Tokens>(`${this.apiUrl}/tokens`);
   }
 
   public async getTokenNetworkForTokenAddress(tokenAddress: string): Promise<string> {
@@ -46,18 +132,123 @@ export class RaidenClient {
       throw new Error(`tokenAddress is required`);
     }
 
-    return this.get<string>(this.apiUrl + "tokens/" + tokenAddress);
+    return this.call<string>(`${this.apiUrl}/tokens/${tokenAddress}`);
   }
 
-  private async get<T>(uri: string): Promise<T> {
-    const response = await fetch(uri);
+  public async getPartnersForTokenAddress(tokenAddress: string): Promise<Partners> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
 
-    if (response.status !== 200) {
+    return this.call<Partners>(`${this.apiUrl}/tokens/${tokenAddress}/partners`);
+  }
+
+  // Transfers
+  public async getPendingTransfers(): Promise<Transfers> {
+    return this.call<Transfers>(`${this.apiUrl}/pending_transfers`);
+  }
+
+  public async getPendingTransfersForTokenAddress(tokenAddress: string): Promise<Partners> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+
+    return this.call<Partners>(`${this.apiUrl}/pending_transfers/${tokenAddress}`);
+  }
+
+  public async getPendingTransfersForTokenAddressAndPartner(tokenAddress: string, partnerAddress: string): Promise<Partners> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!partnerAddress) {
+      throw new Error(`partnerAddress is required`);
+    }
+
+    return this.call<Partners>(`${this.apiUrl}/pending_transfers/${tokenAddress}/${partnerAddress}`);
+  }
+
+  // Connection Management
+  public async getConnections(): Promise<Connections> {
+    return this.call<Connections>(`${this.apiUrl}/connections`);
+  }
+
+  public async joinTokenNetwork(tokenAddress: string, funds: number, channelTarget?: number, fundsTarget?: number): Promise<string> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (funds <= 0) {
+      throw new Error(`funds is required`);
+    }
+
+    const body: any = { funds };
+    if (channelTarget && channelTarget > 0) {
+      body.initial_channel_target = channelTarget;
+    }
+    if (fundsTarget && fundsTarget > 0) {
+      body.joinable_funds_target = channelTarget;
+    }
+
+    return this.call<string>(`${this.apiUrl}/connections/${tokenAddress}`, "PUT", 204, body);
+  }
+
+  public async leaveTokenNetwork(tokenAddress: string): Promise<string[]> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+
+    return this.call<string[]>(`${this.apiUrl}/connections/${tokenAddress}`, "DELETE", 200);
+  }
+
+  // Payments
+  public async initiatePayment(tokenAddress: string, targetAddress: string, amount: number, identifier: number): Promise<Payment> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!targetAddress) {
+      throw new Error(`targetAddress is required`);
+    }
+    if (amount <= 0) {
+      throw new Error(`amount is required`);
+    }
+    if (identifier <= 0) {
+      throw new Error(`identifier is required`);
+    }
+
+    const body = { amount, identifier };
+
+    return this.call<Payment>(`${this.apiUrl}/payments/${tokenAddress}/${targetAddress}`, "POST", 200, body);
+  }
+
+  // Querying
+  public async queryEvents(tokenAddress: string, targetAddress: string): Promise<Events> {
+    if (!tokenAddress) {
+      throw new Error(`tokenAddress is required`);
+    }
+    if (!targetAddress) {
+      throw new Error(`targetAddress is required`);
+    }
+
+    return this.call<Events>(`${this.apiUrl}/payments/${tokenAddress}/${targetAddress}`);
+  }
+
+  // Private
+  private async call<T>(uri: string, method: string = "GET", statusCode: number = 200, body: any = {}): Promise<T> {
+    const response = await fetch(uri, {
+      body: JSON.stringify(body),
+      method
+    });
+
+    if (response.status !== statusCode) {
       // console.log(`Error ${response.status} - ${response.statusText} | ${uri}`);
       throw new Error(`invalid response: ${response.status}`);
     }
 
+    if (response.status === 204) {
+      return {} as T;
+    }
+
     try {
+      // console.log(response);
       return (await response
         .clone()
         .json()
