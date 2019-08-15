@@ -21,11 +21,11 @@ script:
   - npm run lint
   - npm run test
   - npm run doc
-after_script:
-  - touch ./docs/.nojekyll
 after_success:
   - codecov
   - sonar-scanner
+before_deploy:
+  - touch ./docs/.nojekyll
 deploy:
   provider: pages
   skip_cleanup: true
