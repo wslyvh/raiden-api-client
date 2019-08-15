@@ -17,7 +17,7 @@
   "bugs": {
     "url": "https://github.com/wslyvh/Raiden-client/issues"
   },
-  "homepage": "https://github.com/wslyvh/Raiden-client#readme",
+  "homepage": "https://wslyvh.github.io/raiden-api-client/",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
