@@ -29,5 +29,7 @@ deploy:
   local_dir: "docs"
   on:
     branch: master
+before_deploy:
+  - touch .nojekyll
 after_deploy:
-  - touch /.nojekyll
+  - touch .nojekyll
