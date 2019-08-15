@@ -4,6 +4,7 @@
 !/build/**
 /build/**/*.map
 /build/**/*.test.js
+/build/**/*.test.d.ts
 
 /**/coverage
 /**/build

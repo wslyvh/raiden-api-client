@@ -2,19 +2,15 @@
 require("isomorphic-fetch"); /* global fetch */
 import { Address, Channel, Channels, Connections, Events, Partners, Payment, Token, Tokens, Transfers } from "../models/v1";
 
-// [x] Node information
-// [x] Deploying
-// [x] Channels
-//    [x] Channel Management
-// [x] Tokens
-//    [x] Transfers
-// [ ] Connection Management
-// [x] Payments
-// [x] Querying
-
 export class RaidenClient {
   private apiUrl: string;
 
+  /**
+   * Default client that can be constructed for interacting with the Etherscan API.
+   * 
+   * @param baseUrl base url of the API endpoint (e.g; http://localhost:5001/api)
+   * @param version version of the API (e.g; v1)
+   */
   public constructor(baseUrl: string, version: string = "v1") {
     if (!baseUrl) {
       throw new Error(`baseUrl is required`);
