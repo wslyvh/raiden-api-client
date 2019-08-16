@@ -26,10 +26,18 @@ after_success:
   - sonar-scanner
 before_deploy:
   - touch ./docs/.nojekyll
+  - npm run build
 deploy:
   provider: pages
   skip_cleanup: true
   github_token: ${GITHUB_TOKEN}
   local_dir: "docs"
+  on:
+    branch: master
+deploy: 
+  provider: npm
+  skip_cleanup: true
+  api_key: ${NPM_TOKEN}
+  email: ${NPM_EMAIL}
   on:
     branch: master

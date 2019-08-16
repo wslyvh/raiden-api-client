@@ -8,6 +8,7 @@
 
 /**/coverage
 /**/build
+/**/docs
 
 /**/*.map
 /**/*.test.js

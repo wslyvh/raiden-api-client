@@ -1,7 +1,7 @@
 {
   "name": "raiden-api-client",
   "description": "Raiden Network API TypeScript client",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "wslyvh",
   "license": "MIT",
   "keywords": [
